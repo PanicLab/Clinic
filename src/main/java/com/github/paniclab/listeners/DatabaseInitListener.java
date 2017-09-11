@@ -23,7 +23,6 @@ public class DatabaseInitListener implements ServletContextListener {
     private static final String PROPERTY_PATH = "/WEB-INF/cfg/application.properties";
     private static final Properties properties = new Properties();
     private final Logger logger = Logger.getLogger(getClass().getSimpleName());
-    private static ServletContext context;
 
 /*    @Inject
     @Property("database.relative.path")
@@ -51,7 +50,6 @@ public class DatabaseInitListener implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent sce) {
         ServletContext cxt = sce.getServletContext();
-        context = cxt;
 
         loadAppProperties(cxt);
         DataSource dataSource = new DataSourceFactory(properties).getDataSource(cxt);
@@ -80,10 +78,5 @@ public class DatabaseInitListener implements ServletContextListener {
     @Override
     public void contextDestroyed(ServletContextEvent sce) {
 
-    }
-
-    @Produces @AppContext
-    public ServletContext produceContext(InjectionPoint ip) {
-        return context;
     }
 }
