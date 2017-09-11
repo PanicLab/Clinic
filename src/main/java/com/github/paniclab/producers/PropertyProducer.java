@@ -12,8 +12,8 @@ import java.io.InputStream;
 import java.util.Properties;
 import java.util.logging.Logger;
 
+import static com.github.paniclab.utils.Util.print;
 
-@Singleton
 public class PropertyProducer {
     private static final String PROPERTY_PATH = "WEB-INF/cfg/application.properties";
 
@@ -27,10 +27,11 @@ public class PropertyProducer {
 
     @PostConstruct
     private void init() {
+        print("Вызывается метод init в классе PropertyProducer");
         logger = Logger.getLogger(getClass().getSimpleName());
-        logger.info("Идет поиск и загрузка файла properties...");
+        logger.info("Класс PropertyProducer: идет поиск и загрузка файла properties...");
         properties = new Properties();
-        final InputStream inputStream = PropertyProducer.class.getResourceAsStream(PROPERTY_PATH);
+        final InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(PROPERTY_PATH);
 
         try {
             properties.load(inputStream);
@@ -63,12 +64,17 @@ public class PropertyProducer {
     }
 
     private String getKey(InjectionPoint ip) {
+        String result;
         final Annotated codeElement = ip.getAnnotated();
         if (codeElement.isAnnotationPresent(Property.class)) {
             if (!(codeElement.getAnnotation(Property.class).value().isEmpty())) {
-                return codeElement.getAnnotation(Property.class).value();
+                result = codeElement.getAnnotation(Property.class).value();
+                logger.info("Ключ property определен как: " + result);
+                return result;
             }
         }
-        return ip.getMember().getName();
+        result = ip.getMember().getName();
+        logger.info("Ключ property определен как: " + result);
+        return result;
     }
 }
