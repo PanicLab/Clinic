@@ -54,6 +54,7 @@ public class DatabaseInitListener implements ServletContextListener {
         loadAppProperties(cxt);
         DataSource dataSource = new DataSourceFactory(properties).getDataSource(cxt);
         cxt.setAttribute("data_source", dataSource);
+        cxt.setAttribute("persistence_method", properties.getProperty("persistence.method"));
 
         logger.info("Объект DataSource помещен в ServletContext.");
     }

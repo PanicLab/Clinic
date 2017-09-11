@@ -2,6 +2,7 @@ package com.github.paniclab.producers;
 
 
 import javax.annotation.PostConstruct;
+import javax.enterprise.context.Dependent;
 import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.spi.Annotated;
 import javax.enterprise.inject.spi.InjectionPoint;
@@ -12,7 +13,7 @@ import java.util.logging.Logger;
 
 import static com.github.paniclab.utils.Util.print;
 
-
+@Dependent
 public class PropertyProducer {
     private static final String PROPERTY_PATH = "WEB-INF/cfg/application.properties";
 
