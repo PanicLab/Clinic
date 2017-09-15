@@ -2,6 +2,7 @@ package com.github.paniclab.producers;
 
 
 import javax.annotation.PostConstruct;
+import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.Dependent;
 import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.spi.Annotated;
@@ -13,7 +14,7 @@ import java.util.logging.Logger;
 
 import static com.github.paniclab.utils.Util.print;
 
-@Dependent
+@ApplicationScoped
 public class PropertyProducer {
     private static final String PROPERTY_PATH = "WEB-INF/cfg/application.properties";
 
@@ -31,9 +32,10 @@ public class PropertyProducer {
         logger = Logger.getLogger(getClass().getSimpleName());
         logger.info("Класс PropertyProducer: идет поиск и загрузка файла properties...");
         properties = new Properties();
-        final InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(PROPERTY_PATH);
+        final InputStream inputStream = getClass().getClassLoader().getResourceAsStream("application.properties");
 
         try {
+            //logger.info("Определяю classpath: " + getClass().getClassLoader().getResources(""));
             properties.load(inputStream);
             logger.info("Файл properties загружен успешно.");
         } catch (NullPointerException e) {
@@ -48,7 +50,10 @@ public class PropertyProducer {
     @Produces
     @Property
     public String produceString(final InjectionPoint ip) {
-        return properties.getProperty(getKey(ip));
+        String key = getKey(ip);
+        String result = properties.getProperty(getKey(ip));
+        logger.info("Значение property по ключу " + key + " определено как " + result);
+        return result;
     }
 
     @Produces

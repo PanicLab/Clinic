@@ -18,13 +18,14 @@
 		<vaadin.plugin.version>8.1.3</vaadin.plugin.version>
 		<jetty.plugin.version>9.3.9.v20160517</jetty.plugin.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<maven.compiler.source>1.8</maven.compiler.source>
-		<maven.compiler.target>1.8</maven.compiler.target>
 		<!-- If there are no local customisations, this can also be "fetch" or "cdn" -->
 		<vaadin.widgetset.mode>local</vaadin.widgetset.mode>
+        <domain.name>com.github.paniclab</domain.name>
         <resource.path>src/main/resources</resource.path>
         <target.resource.path>/../${project.artifactId}/WEB-INF/</target.resource.path>
-	</properties>
+        <config.path>${project.build.sourceDirectory}/${domain.name}/config</config.path>
+        <target.config.path>${project.build.outputDirectory}</target.config.path>
+    </properties>
 
 	<repositories>
 		<repository>
@@ -46,37 +47,39 @@
 	</dependencyManagement>
 
 	<dependencies>
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>javax.servlet-api</artifactId>
-			<version>3.0.1</version>
-			<scope>provided</scope>
-		</dependency>
+        <!--Vaadin dependencies-->
+        <dependency>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-server</artifactId>
+        </dependency>
 
-		<dependency>
-			<groupId>com.vaadin</groupId>
-			<artifactId>vaadin-server</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-push</artifactId>
+        </dependency>
 
-		<dependency>
-			<groupId>com.vaadin</groupId>
-			<artifactId>vaadin-push</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-client-compiled</artifactId>
+        </dependency>
 
-		<dependency>
-			<groupId>com.vaadin</groupId>
-			<artifactId>vaadin-client-compiled</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>com.vaadin</groupId>
-			<artifactId>vaadin-themes</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-themes</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>com.vaadin</groupId>
             <artifactId>vaadin-icons</artifactId>
             <version>2.0.0</version>
+        </dependency>
+
+        <!--Other project dependencies-->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>3.0.1</version>
+            <scope>provided</scope>
         </dependency>
 
 		<dependency>
@@ -92,24 +95,12 @@
             <version>2.4.0</version>
         </dependency>
 
-<!--        <dependency>
-            <groupId>javax.enterprise</groupId>
-            <artifactId>cdi-api</artifactId>
-            <version>2.0</version>
-            <scope>provided</scope>
-        </dependency>-->
         <dependency>
             <groupId>javax.enterprise</groupId>
             <artifactId>cdi-api</artifactId>
             <!-- Use version 2.0 for Weld 3 -->
             <version>2.0</version>
         </dependency>
-
-<!--        <dependency>
-            <groupId>org.jboss.weld.se</groupId>
-            <artifactId>weld-se</artifactId>
-            <version>2.4.0.Final</version>
-        </dependency>-->
 
     </dependencies>
 
@@ -120,7 +111,14 @@
         <resources>
             <resource>
                 <directory>${resource.path}</directory>
+                <excludes>
+                    <exclude>**/config/**</exclude>
+                </excludes>
                 <targetPath>${target.resource.path}</targetPath>
+            </resource>
+            <resource>
+                <directory>${resource.path}/config</directory>
+                <targetPath>${project.build.outputDirectory}</targetPath>
             </resource>
         </resources>
 
@@ -130,8 +128,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.6.1</version>
                 <configuration>
-                    <source>${maven.compiler.source}</source>
-                    <target>${maven.compiler.target}</target>
+                    <source>1.8</source>
+                    <target>1.8</target>
                 </configuration>
             </plugin>
 

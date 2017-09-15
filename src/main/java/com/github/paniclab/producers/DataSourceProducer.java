@@ -1,26 +1,19 @@
-package com.github.paniclab.listeners;
+package com.github.paniclab.producers;
 
-
-import com.github.paniclab.producers.AppContext;
-import com.github.paniclab.producers.Property;
 import org.hsqldb.jdbc.JDBCDataSource;
 
 import javax.annotation.PostConstruct;
-import javax.enterprise.context.Dependent;
-import javax.enterprise.inject.Default;
+import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 import javax.servlet.ServletContext;
 import javax.sql.DataSource;
-import java.util.Properties;
 import java.util.logging.Logger;
 
 import static com.github.paniclab.utils.Util.print;
 
-
-class DataSourceFactory {
-    private final Logger logger = Logger.getLogger(getClass().getSimpleName());
-
+@ApplicationScoped
+public class DataSourceProducer {
     @Inject
     @Property("database.relative.path")
     private String relative_url;
@@ -33,17 +26,31 @@ class DataSourceFactory {
     @Property("database.password")
     private String password;
 
+    @Inject
+    private ServletContext context;
 
-    DataSourceFactory() {}
+    private DataSource dataSource;
 
-/*    DataSourceFactory(Properties props) {
-        relative_url = props.getProperty("database.relative.path");
-        user = props.getProperty("database.user");
-        password = props.getProperty("database.password");
-    }*/
+    public DataSourceProducer() {}
 
-    DataSource getDataSource(ServletContext cxt) {
-        String baseDir = cxt.getRealPath("/");
+
+    @PostConstruct
+    public void init() {
+        print("Вызывается метод init в классе DataSourceProducer");
+    }
+
+    @Produces
+    @HSQLDB
+    public DataSource produceDataSource() {
+        if (dataSource == null) {
+            createDataSource();
+        }
+        return dataSource;
+    }
+
+    private void createDataSource() {
+        Logger logger = Logger.getLogger(getClass().getSimpleName());
+        String baseDir = context.getRealPath("/");
         logger.info("Путь приложения определен как: " + baseDir);
         final String URL = "jdbc:hsqldb:file:" + baseDir + relative_url;
         logger.info("URL базы данных определен как: " + URL);
@@ -52,6 +59,6 @@ class DataSourceFactory {
         ds.setUser(user);
         ds.setPassword(password);
         logger.info("Объект DataSource создан успешно.");
-        return ds;
+        dataSource = ds;
     }
 }

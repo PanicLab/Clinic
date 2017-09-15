@@ -1,10 +1,12 @@
 package com.github.paniclab.listeners;
 
 import com.github.paniclab.producers.AppContext;
+import com.github.paniclab.producers.HSQLDB;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.spi.InjectionPoint;
+import javax.inject.Inject;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -37,6 +39,7 @@ public class DatabaseInitListener implements ServletContextListener {
     private String password;*/
 
 
+
     public DatabaseInitListener() {
         super();
     }
@@ -52,16 +55,16 @@ public class DatabaseInitListener implements ServletContextListener {
         ServletContext cxt = sce.getServletContext();
 
         loadAppProperties(cxt);
-        DataSource dataSource = new DataSourceFactory(properties).getDataSource(cxt);
+/*        DataSource dataSource = new DataSourceFactory(properties).getDataSource(cxt);
         cxt.setAttribute("data_source", dataSource);
         cxt.setAttribute("persistence_method", properties.getProperty("persistence.method"));
 
-        logger.info("Объект DataSource помещен в ServletContext.");
+        logger.info("Объект DataSource помещен в ServletContext.");*/
     }
 
     private void loadAppProperties(ServletContext cxt) {
         logger.info("Идет поиск и загрузка файла properties...");
-        final InputStream inputStream = cxt.getResourceAsStream(PROPERTY_PATH);
+        final InputStream inputStream = getClass().getClassLoader().getResourceAsStream("application.properties");
 
         try {
             properties.load(inputStream);

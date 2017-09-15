@@ -1,9 +1,12 @@
 package com.github.paniclab;
 
+import javax.inject.Inject;
 import javax.servlet.ServletContextListener;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.sql.DataSource;
 
+import com.github.paniclab.producers.HSQLDB;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
 import com.vaadin.annotations.VaadinServletConfiguration;
@@ -26,6 +29,10 @@ import com.vaadin.ui.VerticalLayout;
 @Title("Клиника")
 @Theme("mytheme")
 public class MyUI extends UI {
+
+    @Inject
+    @HSQLDB
+    private DataSource dataSource;
 
     @Override
     protected void init(VaadinRequest vaadinRequest) {
