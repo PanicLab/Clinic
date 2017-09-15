@@ -22,23 +22,7 @@ import static com.github.paniclab.utils.Util.print;
 
 @WebListener
 public class DatabaseInitListener implements ServletContextListener {
-    private static final String PROPERTY_PATH = "/WEB-INF/cfg/application.properties";
-    private static final Properties properties = new Properties();
     private final Logger logger = Logger.getLogger(getClass().getSimpleName());
-
-/*    @Inject
-    @Property("database.relative.path")
-    private String url;
-
-    @Inject
-    @Property("database.user")
-    private String user;
-
-    @Inject
-    @Property("database.password")
-    private String password;*/
-
-
 
     public DatabaseInitListener() {
         super();
@@ -52,30 +36,7 @@ public class DatabaseInitListener implements ServletContextListener {
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {
-        ServletContext cxt = sce.getServletContext();
 
-        loadAppProperties(cxt);
-/*        DataSource dataSource = new DataSourceFactory(properties).getDataSource(cxt);
-        cxt.setAttribute("data_source", dataSource);
-        cxt.setAttribute("persistence_method", properties.getProperty("persistence.method"));
-
-        logger.info("Объект DataSource помещен в ServletContext.");*/
-    }
-
-    private void loadAppProperties(ServletContext cxt) {
-        logger.info("Идет поиск и загрузка файла properties...");
-        final InputStream inputStream = getClass().getClassLoader().getResourceAsStream("application.properties");
-
-        try {
-            properties.load(inputStream);
-            logger.info("Файл properties загружен успешно.");
-        } catch (NullPointerException e) {
-            logger.severe("Файл properties не найден.");
-            e.printStackTrace();
-        } catch (IOException e) {
-            logger.severe("Ошибка ввода-вывода при загрузке файла properties.");
-            e.printStackTrace();
-        }
     }
 
 
